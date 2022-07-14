@@ -403,3 +403,18 @@ func TestPopFound(t *testing.T) {
 	assert.Equal(t, "aaa", index)
 	assert.Equal(t, 2, l.Length())
 }
+
+func TestEmptyLinkedList(t *testing.T) {
+	l := NewLinkedList[string]()
+	l.PushHead("aaa")
+	l.PushHead("bbb")
+	l.PushTail("ccc")
+	assert.Equal(t, 3, l.Length())
+	assert.False(t, l.IsEmpty())
+
+	l.PopTail()
+	l.PopTail()
+	l.PopTail()
+	assert.Equal(t, 0, l.Length())
+	assert.True(t, l.IsEmpty())
+}

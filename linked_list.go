@@ -255,6 +255,10 @@ func (l *linkedList[T]) Length() int {
 	return l.lenght
 }
 
+func (l *linkedList[T]) IsEmpty() bool {
+	return l.lenght <= 0
+}
+
 func (l *linkedList[T]) String() string {
 	var builder strings.Builder
 
