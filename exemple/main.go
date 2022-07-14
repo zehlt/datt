@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/zehlt/datt"
 )
 
@@ -19,5 +17,5 @@ func main() {
 	// 	fmt.Println(data)
 	// })
 
-	fmt.Println(l.String())
+	// fmt.Println(l.String())
 }

@@ -2,8 +2,6 @@ package datt
 
 import (
 	"errors"
-	"fmt"
-	"strings"
 )
 
 var (
@@ -12,29 +10,29 @@ var (
 	ErrNotFound        = errors.New("data not found")
 )
 
-type Node[T comparable] struct {
+type node[T comparable] struct {
 	Data T
-	Next *Node[T]
+	Next *node[T]
 }
 
-type linkedList[T comparable] struct {
-	head   *Node[T]
-	tail   *Node[T]
+type LinkedList[T comparable] struct {
+	head   *node[T]
+	tail   *node[T]
 	lenght int
 }
 
-func NewLinkedList[T comparable]() linkedList[T] {
-	return linkedList[T]{
+func NewLinkedList[T comparable]() LinkedList[T] {
+	return LinkedList[T]{
 		head:   nil,
 		tail:   nil,
 		lenght: 0,
 	}
 }
 
-func (l *linkedList[T]) PushHead(data T) {
+func (l *LinkedList[T]) PushHead(data T) {
 	previousHead := l.head
 
-	newHead := &Node[T]{
+	newHead := &node[T]{
 		Data: data,
 		Next: previousHead,
 	}
@@ -49,8 +47,8 @@ func (l *linkedList[T]) PushHead(data T) {
 	l.lenght++
 }
 
-func (l *linkedList[T]) PushTail(data T) {
-	newTail := &Node[T]{
+func (l *LinkedList[T]) PushTail(data T) {
+	newTail := &node[T]{
 		Data: data,
 		Next: nil,
 	}
@@ -67,7 +65,7 @@ func (l *linkedList[T]) PushTail(data T) {
 	l.lenght++
 }
 
-func (l *linkedList[T]) PopHead() (T, error) {
+func (l *LinkedList[T]) PopHead() (T, error) {
 	if l.lenght <= 0 {
 		var empty T
 		return empty, ErrEmptyList
@@ -86,7 +84,7 @@ func (l *linkedList[T]) PopHead() (T, error) {
 	return previousHead.Data, nil
 }
 
-func (l *linkedList[T]) PopTail() (T, error) {
+func (l *LinkedList[T]) PopTail() (T, error) {
 	if l.lenght <= 0 {
 		var empty T
 		return empty, ErrEmptyList
@@ -111,7 +109,7 @@ func (l *linkedList[T]) PopTail() (T, error) {
 	return previousTail.Data, nil
 }
 
-func (l *linkedList[T]) PeekAt(index int) (T, error) {
+func (l *LinkedList[T]) PeekAt(index int) (T, error) {
 	var d T
 
 	if l.lenght <= 0 {
@@ -140,68 +138,68 @@ func (l *linkedList[T]) PeekAt(index int) (T, error) {
 
 // TODO: add insert at
 
-func (l *linkedList[T]) Pop(data T) (T, error) {
+func (l *LinkedList[T]) Pop(data T) (T, error) {
 	var d T
 
 	if l.lenght <= 0 {
 		return d, ErrEmptyList
 	}
 
-	currentNode := l.head
-	var previousNode *Node[T]
+	currentnode := l.head
+	var previousnode *node[T]
 
 	for i := 0; i < l.lenght; i++ {
-		previousNode = currentNode
+		previousnode = currentnode
 
-		if currentNode.Data == data {
-			previousNode.Next = currentNode.Next
+		if currentnode.Data == data {
+			previousnode.Next = currentnode.Next
 			l.lenght--
 
-			return currentNode.Data, nil
+			return currentnode.Data, nil
 		}
-		currentNode = currentNode.Next
+		currentnode = currentnode.Next
 	}
 
 	return d, ErrNotFound
 }
 
-func (l *linkedList[T]) IndexOf(data T) (int, error) {
+func (l *LinkedList[T]) IndexOf(data T) (int, error) {
 	if l.lenght <= 0 {
 		return 0, ErrEmptyList
 	}
 
-	currentNode := l.head
+	currentnode := l.head
 
 	for i := 0; i < l.lenght; i++ {
-		if currentNode.Data == data {
+		if currentnode.Data == data {
 			return i, nil
 		}
 
-		currentNode = currentNode.Next
+		currentnode = currentnode.Next
 	}
 
 	return 0, ErrNotFound
 }
 
-func (l *linkedList[T]) Contains(data T) bool {
+func (l *LinkedList[T]) Contains(data T) bool {
 	if l.lenght <= 0 {
 		return false
 	}
 
-	currentNode := l.head
+	currentnode := l.head
 
 	for i := 0; i < l.lenght; i++ {
-		if currentNode.Data == data {
+		if currentnode.Data == data {
 			return true
 		}
 
-		currentNode = currentNode.Next
+		currentnode = currentnode.Next
 	}
 
 	return false
 }
 
-func (l *linkedList[T]) PopAt(index int) (T, error) {
+func (l *LinkedList[T]) PopAt(index int) (T, error) {
 	var d T
 
 	if l.lenght <= 0 {
@@ -220,20 +218,20 @@ func (l *linkedList[T]) PopAt(index int) (T, error) {
 		return l.PopTail()
 	}
 
-	currentNode := l.head
-	var previousNode *Node[T]
+	currentnode := l.head
+	var previousnode *node[T]
 
 	for i := 0; i < index; i++ {
-		previousNode = currentNode
-		currentNode = currentNode.Next
+		previousnode = currentnode
+		currentnode = currentnode.Next
 	}
 
-	previousNode.Next = currentNode.Next
+	previousnode.Next = currentnode.Next
 	l.lenght--
-	return currentNode.Data, nil
+	return currentnode.Data, nil
 }
 
-func (l *linkedList[T]) PeekHead() (T, error) {
+func (l *LinkedList[T]) PeekHead() (T, error) {
 	if l.lenght <= 0 {
 		var d T
 		return d, ErrEmptyList
@@ -242,7 +240,7 @@ func (l *linkedList[T]) PeekHead() (T, error) {
 	return l.head.Data, nil
 }
 
-func (l *linkedList[T]) PeekTail() (T, error) {
+func (l *LinkedList[T]) PeekTail() (T, error) {
 	if l.lenght <= 0 {
 		var d T
 		return d, ErrEmptyList
@@ -251,27 +249,27 @@ func (l *linkedList[T]) PeekTail() (T, error) {
 	return l.tail.Data, nil
 }
 
-func (l *linkedList[T]) Length() int {
+func (l *LinkedList[T]) Length() int {
 	return l.lenght
 }
 
-func (l *linkedList[T]) IsEmpty() bool {
+func (l *LinkedList[T]) IsEmpty() bool {
 	return l.lenght <= 0
 }
 
-func (l *linkedList[T]) String() string {
-	var builder strings.Builder
+// func (l *LinkedList[T]) String() string {
+// 	var builder strings.Builder
 
-	currentNode := l.head
-	for currentNode != nil {
-		builder.WriteString(fmt.Sprintf("[%v] -> ", currentNode.Data))
-		currentNode = currentNode.Next
-	}
+// 	currentnode := l.head
+// 	for currentnode != nil {
+// 		builder.WriteString(fmt.Sprintf("[%v] -> ", currentnode.Data))
+// 		currentnode = currentnode.Next
+// 	}
 
-	return builder.String()
-}
+// 	return builder.String()
+// }
 
-func (l *linkedList[T]) Clear() {
+func (l *LinkedList[T]) Clear() {
 	if l.lenght <= 0 {
 		return
 	}

@@ -1,39 +1,39 @@
 package datt
 
-type stack[T comparable] struct {
-	l linkedList[T]
+type Stack[T comparable] struct {
+	l LinkedList[T]
 }
 
-func NewStack[T comparable]() stack[T] {
-	return stack[T]{
+func NewStack[T comparable]() Stack[T] {
+	return Stack[T]{
 		l: NewLinkedList[T](),
 	}
 }
 
-func (s *stack[T]) Push(data T) {
+func (s *Stack[T]) Push(data T) {
 	s.l.PushHead(data)
 }
 
-func (s *stack[T]) Pop() (T, error) {
+func (s *Stack[T]) Pop() (T, error) {
 	return s.l.PopHead()
 }
 
-func (s *stack[T]) PeekFront() (T, error) {
+func (s *Stack[T]) PeekFront() (T, error) {
 	return s.l.PeekHead()
 }
 
-func (s *stack[T]) PeekBack() (T, error) {
+func (s *Stack[T]) PeekBack() (T, error) {
 	return s.l.PeekTail()
 }
 
-func (s *stack[T]) Length() int {
+func (s *Stack[T]) Length() int {
 	return s.l.Length()
 }
 
-func (s *stack[T]) IsEmpty() bool {
+func (s *Stack[T]) IsEmpty() bool {
 	return s.l.IsEmpty()
 }
 
-func (s *stack[T]) Clear() {
+func (s *Stack[T]) Clear() {
 	s.l.Clear()
 }

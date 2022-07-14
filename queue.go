@@ -1,39 +1,39 @@
 package datt
 
-type queue[T comparable] struct {
-	l linkedList[T]
+type Queue[T comparable] struct {
+	l LinkedList[T]
 }
 
-func NewQueue[T comparable]() queue[T] {
-	return queue[T]{
+func NewQueue[T comparable]() Queue[T] {
+	return Queue[T]{
 		l: NewLinkedList[T](),
 	}
 }
 
-func (q *queue[T]) PeekFront() (T, error) {
+func (q *Queue[T]) PeekFront() (T, error) {
 	return q.l.PeekHead()
 }
 
-func (q *queue[T]) PeekBack() (T, error) {
+func (q *Queue[T]) PeekBack() (T, error) {
 	return q.l.PeekTail()
 }
 
-func (q *queue[T]) Enqueue(data T) {
+func (q *Queue[T]) Enqueue(data T) {
 	q.l.PushTail(data)
 }
 
-func (q *queue[T]) Dequeue() (T, error) {
+func (q *Queue[T]) Dequeue() (T, error) {
 	return q.l.PopHead()
 }
 
-func (q *queue[T]) Length() int {
+func (q *Queue[T]) Length() int {
 	return q.l.Length()
 }
 
-func (q *queue[T]) IsEmpty() bool {
+func (q *Queue[T]) IsEmpty() bool {
 	return q.l.IsEmpty()
 }
 
-func (q *queue[T]) Clear() {
+func (q *Queue[T]) Clear() {
 	q.l.Clear()
 }
