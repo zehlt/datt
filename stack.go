@@ -1,10 +1,10 @@
 package datt
 
-type Stack[T comparable] struct {
+type Stack[T any] struct {
 	l LinkedList[T]
 }
 
-func NewStack[T comparable]() Stack[T] {
+func NewStack[T any]() Stack[T] {
 	return Stack[T]{
 		l: NewLinkedList[T](),
 	}

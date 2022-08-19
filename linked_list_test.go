@@ -6,6 +6,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func BenchmarkQueuePush(b *testing.B) {
+	ll := NewLinkedList[string]()
+
+	for i := 0; i < b.N; i++ {
+		ll.PushHead("bab")
+	}
+}
+
+func BenchmarkQueuePushAndPop(b *testing.B) {
+	ll := NewLinkedList[string]()
+
+	for i := 0; i < b.N; i++ {
+		ll.PushHead("bab")
+		ll.PushHead("bub")
+		// ll.PopTail()
+	}
+}
+
 func TestPushHeadOnce(t *testing.T) {
 	l := NewLinkedList[string]()
 	expected := "pierre"
@@ -308,101 +326,101 @@ func TestPopAtMiddle(t *testing.T) {
 	assert.Equal(t, "aaa", got)
 }
 
-func TestContainsEmptylist(t *testing.T) {
-	l := NewLinkedList[string]()
-	b := l.Contains("pierre")
-	assert.Equal(t, false, b)
-}
+// func TestContainsEmptylist(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	b := l.Contains("pierre")
+// 	assert.Equal(t, false, b)
+// }
 
-func TestContainsFalse(t *testing.T) {
-	l := NewLinkedList[string]()
-	l.PushHead("aaa")
-	l.PushHead("bbb")
-	l.PushTail("ccc")
-	assert.Equal(t, 3, l.Length())
+// func TestContainsFalse(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	l.PushHead("aaa")
+// 	l.PushHead("bbb")
+// 	l.PushTail("ccc")
+// 	assert.Equal(t, 3, l.Length())
 
-	b := l.Contains("pierre")
-	assert.Equal(t, false, b)
-}
+// 	b := l.Contains("pierre")
+// 	assert.Equal(t, false, b)
+// }
 
-func TestContainsTrue(t *testing.T) {
-	l := NewLinkedList[string]()
-	l.PushHead("aaa")
-	l.PushHead("bbb")
-	l.PushTail("ccc")
-	assert.Equal(t, 3, l.Length())
+// func TestContainsTrue(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	l.PushHead("aaa")
+// 	l.PushHead("bbb")
+// 	l.PushTail("ccc")
+// 	assert.Equal(t, 3, l.Length())
 
-	b := l.Contains("aaa")
-	assert.Equal(t, true, b)
-}
+// 	b := l.Contains("aaa")
+// 	assert.Equal(t, true, b)
+// }
 
-//
+// //
 
-func TestIndexOfEmptylist(t *testing.T) {
-	l := NewLinkedList[string]()
-	_, err := l.IndexOf("pierre")
-	assert.Error(t, err)
-	assert.Equal(t, ErrEmptyList, err)
-}
+// func TestIndexOfEmptylist(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	_, err := l.IndexOf("pierre")
+// 	assert.Error(t, err)
+// 	assert.Equal(t, ErrEmptyList, err)
+// }
 
-func TestIndexOfNotFound(t *testing.T) {
-	l := NewLinkedList[string]()
-	l.PushHead("aaa")
-	l.PushHead("bbb")
-	l.PushTail("ccc")
-	assert.Equal(t, 3, l.Length())
+// func TestIndexOfNotFound(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	l.PushHead("aaa")
+// 	l.PushHead("bbb")
+// 	l.PushTail("ccc")
+// 	assert.Equal(t, 3, l.Length())
 
-	_, err := l.IndexOf("pierre")
-	assert.Error(t, err)
-	assert.Equal(t, ErrNotFound, err)
-}
+// 	_, err := l.IndexOf("pierre")
+// 	assert.Error(t, err)
+// 	assert.Equal(t, ErrNotFound, err)
+// }
 
-func TestIndexOfFound(t *testing.T) {
-	l := NewLinkedList[string]()
-	l.PushHead("aaa")
-	l.PushHead("bbb")
-	l.PushTail("ccc")
-	assert.Equal(t, 3, l.Length())
+// func TestIndexOfFound(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	l.PushHead("aaa")
+// 	l.PushHead("bbb")
+// 	l.PushTail("ccc")
+// 	assert.Equal(t, 3, l.Length())
 
-	index, err := l.IndexOf("aaa")
-	assert.NoError(t, err)
-	assert.Equal(t, 1, index)
-}
+// 	index, err := l.IndexOf("aaa")
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, 1, index)
+// }
 
-//
+// //
 
-func TestPopEmptylist(t *testing.T) {
-	l := NewLinkedList[string]()
-	_, err := l.Pop("pierre")
-	assert.Error(t, err)
-	assert.Equal(t, ErrEmptyList, err)
-}
+// func TestPopEmptylist(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	_, err := l.Pop("pierre")
+// 	assert.Error(t, err)
+// 	assert.Equal(t, ErrEmptyList, err)
+// }
 
-func TestPopNotFound(t *testing.T) {
-	l := NewLinkedList[string]()
-	l.PushHead("aaa")
-	l.PushHead("bbb")
-	l.PushTail("ccc")
-	assert.Equal(t, 3, l.Length())
+// func TestPopNotFound(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	l.PushHead("aaa")
+// 	l.PushHead("bbb")
+// 	l.PushTail("ccc")
+// 	assert.Equal(t, 3, l.Length())
 
-	_, err := l.Pop("pierre")
-	assert.Error(t, err)
-	assert.Equal(t, ErrNotFound, err)
-	assert.Equal(t, 3, l.Length())
-}
+// 	_, err := l.Pop("pierre")
+// 	assert.Error(t, err)
+// 	assert.Equal(t, ErrNotFound, err)
+// 	assert.Equal(t, 3, l.Length())
+// }
 
-func TestPopFound(t *testing.T) {
-	l := NewLinkedList[string]()
-	l.PushHead("aaa")
-	l.PushHead("bbb")
-	l.PushTail("ccc")
-	assert.Equal(t, 3, l.Length())
+// func TestPopFound(t *testing.T) {
+// 	l := NewLinkedList[string]()
+// 	l.PushHead("aaa")
+// 	l.PushHead("bbb")
+// 	l.PushTail("ccc")
+// 	assert.Equal(t, 3, l.Length())
 
-	index, err := l.Pop("aaa")
-	assert.NoError(t, err)
-	assert.Equal(t, "aaa", index)
-	assert.Equal(t, 2, l.Length())
-}
+// 	index, err := l.Pop("aaa")
+// 	assert.NoError(t, err)
+// 	assert.Equal(t, "aaa", index)
+// 	assert.Equal(t, 2, l.Length())
+// }
 
 func TestEmptyLinkedList(t *testing.T) {
 	l := NewLinkedList[string]()

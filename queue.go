@@ -1,10 +1,10 @@
 package datt
 
-type Queue[T comparable] struct {
+type Queue[T any] struct {
 	l LinkedList[T]
 }
 
-func NewQueue[T comparable]() Queue[T] {
+func NewQueue[T any]() Queue[T] {
 	return Queue[T]{
 		l: NewLinkedList[T](),
 	}
