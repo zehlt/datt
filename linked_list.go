@@ -2,6 +2,8 @@ package datt
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 )
 
 var (
@@ -21,8 +23,8 @@ type LinkedList[T any] struct {
 	lenght int
 }
 
-func NewLinkedList[T any]() LinkedList[T] {
-	return LinkedList[T]{
+func NewLinkedList[T any]() *LinkedList[T] {
+	return &LinkedList[T]{
 		head:   nil,
 		tail:   nil,
 		lenght: 0,
@@ -190,6 +192,30 @@ func (l *LinkedList[T]) Length() int {
 	return l.lenght
 }
 
+func (l *LinkedList[T]) Iterator(callback func(value T) bool) {
+	currentNode := l.head
+
+	for i := 0; i < l.lenght; i++ {
+		shouldStop := callback(currentNode.Data)
+		if shouldStop {
+			break
+		}
+
+		currentNode = currentNode.Next
+	}
+}
+
+func (l *LinkedList[T]) String() string {
+	var builder strings.Builder
+
+	l.Iterator(func(value T) bool {
+		builder.WriteString(fmt.Sprintf("[%v] -> ", value))
+		return false
+	})
+
+	return builder.String()
+}
+
 func (l *LinkedList[T]) IsEmpty() bool {
 	return l.lenght <= 0
 }
@@ -204,77 +230,3 @@ func (l *LinkedList[T]) Clear() {
 	l.tail = nil
 	l.lenght = 0
 }
-
-// TODO: add insert at
-// func (l *LinkedList[T]) Pop(data T) (T, error) {
-// 	var d T
-
-// 	if l.lenght <= 0 {
-// 		return d, ErrEmptyList
-// 	}
-
-// 	currentnode := l.head
-// 	var previousnode *node[T]
-
-// 	for i := 0; i < l.lenght; i++ {
-// 		previousnode = currentnode
-
-// 		if currentnode.Data == data {
-// 			previousnode.Next = currentnode.Next
-// 			l.lenght--
-
-// 			return currentnode.Data, nil
-// 		}
-// 		currentnode = currentnode.Next
-// 	}
-
-// 	return d, ErrNotFound
-// }
-
-// func (l *LinkedList[T]) IndexOf(data T) (int, error) {
-// 	if l.lenght <= 0 {
-// 		return 0, ErrEmptyList
-// 	}
-
-// 	currentnode := l.head
-
-// 	for i := 0; i < l.lenght; i++ {
-// 		if currentnode.Data == data {
-// 			return i, nil
-// 		}
-
-// 		currentnode = currentnode.Next
-// 	}
-
-// 	return 0, ErrNotFound
-// }
-
-// func (l *LinkedList[T]) Contains(data T) bool {
-// 	if l.lenght <= 0 {
-// 		return false
-// 	}
-
-// 	currentnode := l.head
-
-// 	for i := 0; i < l.lenght; i++ {
-// 		if currentnode.Data == data {
-// 			return true
-// 		}
-
-// 		currentnode = currentnode.Next
-// 	}
-
-// 	return false
-// }
-
-// func (l *LinkedList[T]) String() string {
-// 	var builder strings.Builder
-
-// 	currentnode := l.head
-// 	for currentnode != nil {
-// 		builder.WriteString(fmt.Sprintf("[%v] -> ", currentnode.Data))
-// 		currentnode = currentnode.Next
-// 	}
-
-// 	return builder.String()
-// }

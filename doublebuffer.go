@@ -12,13 +12,13 @@ type DoubleBuffer[T any] struct {
 	popMutex  sync.Mutex
 }
 
-func NewDoubleBuffer[T any]() DoubleBuffer[T] {
+func NewDoubleBuffer[T any]() *DoubleBuffer[T] {
 	front := NewQueue[T]()
 	back := NewQueue[T]()
 
-	return DoubleBuffer[T]{
-		frontBuff: &front,
-		backBuff:  &back,
+	return &DoubleBuffer[T]{
+		frontBuff: front,
+		backBuff:  back,
 	}
 }
 

@@ -1,39 +1,49 @@
 package datt
 
-type Stack[T any] struct {
-	l LinkedList[T]
+type Stack[T any] interface {
+	Push(data T)
+	Pop() (T, error)
+	PeekFront() (T, error)
+	PeekBack() (T, error)
+	Length() int
+	IsEmpty() bool
+	Clear()
+}
+
+type stack[T any] struct {
+	l *LinkedList[T]
 }
 
 func NewStack[T any]() Stack[T] {
-	return Stack[T]{
+	return &stack[T]{
 		l: NewLinkedList[T](),
 	}
 }
 
-func (s *Stack[T]) Push(data T) {
+func (s *stack[T]) Push(data T) {
 	s.l.PushHead(data)
 }
 
-func (s *Stack[T]) Pop() (T, error) {
+func (s *stack[T]) Pop() (T, error) {
 	return s.l.PopHead()
 }
 
-func (s *Stack[T]) PeekFront() (T, error) {
+func (s *stack[T]) PeekFront() (T, error) {
 	return s.l.PeekHead()
 }
 
-func (s *Stack[T]) PeekBack() (T, error) {
+func (s *stack[T]) PeekBack() (T, error) {
 	return s.l.PeekTail()
 }
 
-func (s *Stack[T]) Length() int {
+func (s *stack[T]) Length() int {
 	return s.l.Length()
 }
 
-func (s *Stack[T]) IsEmpty() bool {
+func (s *stack[T]) IsEmpty() bool {
 	return s.l.IsEmpty()
 }
 
-func (s *Stack[T]) Clear() {
+func (s *stack[T]) Clear() {
 	s.l.Clear()
 }

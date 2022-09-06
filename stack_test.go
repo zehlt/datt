@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStackLengthIncreaseAndDecrease(t *testing.T) {
+func TestStackLinkedListLengthIncreaseAndDecrease(t *testing.T) {
 	q := NewStack[string]()
 	assert.Equal(t, 0, q.Length())
 
@@ -18,7 +18,7 @@ func TestStackLengthIncreaseAndDecrease(t *testing.T) {
 	assert.Equal(t, 0, q.Length())
 }
 
-func TestStackPushOnce(t *testing.T) {
+func TestStackLinkedListPushOnce(t *testing.T) {
 	q := NewStack[string]()
 	expected := "pierre"
 
@@ -30,7 +30,7 @@ func TestStackPushOnce(t *testing.T) {
 	assert.Equal(t, expected, got)
 }
 
-func TestStackPushMultiple(t *testing.T) {
+func TestStackLinkedListPushMultiple(t *testing.T) {
 	q := NewStack[string]()
 	expected1 := "pierre"
 	expected2 := "marie"
@@ -57,7 +57,7 @@ func TestStackPushMultiple(t *testing.T) {
 	assert.Equal(t, expected1, got4)
 }
 
-func TestStackClearMultiple(t *testing.T) {
+func TestStackLinkedListClearMultiple(t *testing.T) {
 	q := NewStack[string]()
 	expected1 := "pierre"
 	expected2 := "marie"
@@ -74,7 +74,7 @@ func TestStackClearMultiple(t *testing.T) {
 	assert.Equal(t, 0, q.Length())
 }
 
-func TestStackPeakFrontAndBack(t *testing.T) {
+func TestStackLinkedListPeakFrontAndBack(t *testing.T) {
 	q := NewStack[string]()
 	expected1 := "pierre"
 	expected2 := "marie"

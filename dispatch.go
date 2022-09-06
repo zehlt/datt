@@ -1,13 +1,21 @@
 package datt
 
-import "fmt"
+import (
+	"errors"
+)
+
+var (
+	ErrDispatchNoHandlerRegistered = errors.New("type has not been registered")
+)
 
 type Dispatch[T comparable, D any] struct {
 	handlers map[T][]func(data D)
 }
 
-func (d *Dispatch[T, D]) Init() {
-	d.handlers = make(map[T][]func(data D))
+func NewDispatch[T comparable, D any]() *Dispatch[T, D] {
+	return &Dispatch[T, D]{
+		handlers: make(map[T][]func(data D)),
+	}
 }
 
 func (d *Dispatch[T, D]) Subscribe(t T, f func(data D)) {
@@ -26,7 +34,7 @@ func (d *Dispatch[T, D]) ensureArrayExists(t T) {
 func (d *Dispatch[T, D]) Publish(t T, data D) error {
 	functions, ok := d.handlers[t]
 	if !ok {
-		return fmt.Errorf("type has not been registered")
+		return ErrDispatchNoHandlerRegistered
 	}
 
 	for _, fn := range functions {
