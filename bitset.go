@@ -150,6 +150,23 @@ func (b *Bitset) Xor(other *Bitset) error {
 	return nil
 }
 
+func (b *Bitset) Inverse() {
+	for i, bits := range b.bytes {
+		b.bytes[i] = (0b11111111 - bits)
+	}
+}
+
+func (b *Bitset) Clone() *Bitset {
+	newBiteset := Bitset{
+		size:  b.size,
+		bytes: make([]uint8, b.size),
+	}
+
+	copy(newBiteset.bytes, b.bytes)
+
+	return &newBiteset
+}
+
 func (b *Bitset) Lenght() int {
 	return b.size
 }
