@@ -21,6 +21,21 @@ func NewSet[T comparable]() *Set[T] {
 	}
 }
 
+func NewSetVar[T comparable](values ...T) (*Set[T], error) {
+	s := &Set[T]{
+		hash: make(map[T]bool),
+	}
+
+	for _, value := range values {
+		err := s.Append(value)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return s, nil
+}
+
 func (s *Set[T]) Append(value T) error {
 	_, ok := s.hash[value]
 	if ok {
