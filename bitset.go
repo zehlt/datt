@@ -7,49 +7,49 @@ import (
 )
 
 var (
-	ErrBitsetOfDifferentSize = errors.New("bitsets must be of the same size")
+	ErrBitsetOfDifferentSize     = errors.New("bitsets must be of the same size")
+	ErrBitsetOperationOutOfRance = errors.New("out of range operation")
+	ErrBitsetWrongSize           = errors.New("the size of the bitset must be > 0")
 )
 
 type Bitset struct {
-	bytes []uint8
-	size  int
+	bytes   []uint8
+	numByte int
+	numBits int
 }
 
-func NewBitset(byteCapacity int) *Bitset {
-	return &Bitset{
-		bytes: make([]uint8, byteCapacity),
+func NewBitset(numBits int) (*Bitset, error) {
+	if numBits < 0 {
+		return nil, ErrBitsetWrongSize
 	}
+
+	numByte := ((numBits - 1) / 8) + 1
+
+	return &Bitset{
+		bytes:   make([]uint8, numByte),
+		numByte: numByte,
+		numBits: numBits,
+	}, nil
 }
 
-func (b *Bitset) Set(n int, val bool) {
-	if n < 0 {
-		return
+func (b *Bitset) Set(n int, val bool) error {
+	if n < 0 || n >= b.numBits {
+		return ErrBitsetOperationOutOfRance
 	}
 
 	byteIndex := n / 8
 	bitPosition := n % 8
-
-	if byteIndex >= b.size {
-		diff := byteIndex + 1 - b.size
-		for i := 0; i < diff; i++ {
-			b.bytes = append(b.bytes, 0)
-			b.size++
-		}
-	}
 
 	if val {
 		b.bytes[byteIndex] |= (1 << bitPosition)
 	} else {
 		b.bytes[byteIndex] &= (0b11111111 - (1 << bitPosition))
 	}
+	return nil
 }
 
 func (b *Bitset) Get(n int) bool {
-	if n < 0 {
-		return false
-	}
-
-	if n >= b.size*8 {
+	if n < 0 || n >= b.numBits {
 		return false
 	}
 
@@ -59,33 +59,19 @@ func (b *Bitset) Get(n int) bool {
 	return (b.bytes[byteIndex] & (1 << bitPosition)) != 0
 }
 
-func (b *Bitset) Include(other *Bitset) bool {
-	if other.size > b.size {
-		return false
-	}
-
-	for i := 0; i < other.size; i++ {
-		if b.bytes[i] != other.bytes[i] {
-			return false
+func (b *Bitset) Any() bool {
+	for _, b := range b.bytes {
+		if b != 0 {
+			return true
 		}
 	}
 
-	return true
+	return false
 }
 
-func (b *Bitset) Match(matcher *Bitset) bool {
-	for i := 0; i < matcher.size; i++ {
-		match_byte := matcher.bytes[i]
-
-		if match_byte == 0 {
-			continue
-		}
-
-		if i > b.size {
-			return false
-		}
-
-		if (b.bytes[i] & match_byte) != match_byte {
+func (b *Bitset) None() bool {
+	for _, b := range b.bytes {
+		if b != 0 {
 			return false
 		}
 	}
@@ -94,11 +80,11 @@ func (b *Bitset) Match(matcher *Bitset) bool {
 }
 
 func (b *Bitset) Equal(other *Bitset) bool {
-	if b.size != other.size {
+	if b.numBits != other.numBits {
 		return false
 	}
 
-	for i := 0; i < b.size; i++ {
+	for i := 0; i < b.numByte; i++ {
 		if b.bytes[i] != other.bytes[i] {
 			return false
 		}
@@ -108,11 +94,11 @@ func (b *Bitset) Equal(other *Bitset) bool {
 }
 
 func (b *Bitset) And(other *Bitset) error {
-	if b.size != other.size {
+	if b.numBits != other.numBits {
 		return ErrBitsetOfDifferentSize
 	}
 
-	for i := 0; i < b.size; i++ {
+	for i := 0; i < b.numByte; i++ {
 		b.bytes[i] &= other.bytes[i]
 	}
 
@@ -120,11 +106,11 @@ func (b *Bitset) And(other *Bitset) error {
 }
 
 func (b *Bitset) Or(other *Bitset) error {
-	if b.size != other.size {
+	if b.numBits != other.numBits {
 		return ErrBitsetOfDifferentSize
 	}
 
-	for i := 0; i < b.size; i++ {
+	for i := 0; i < b.numByte; i++ {
 		b.bytes[i] |= other.bytes[i]
 	}
 
@@ -132,11 +118,11 @@ func (b *Bitset) Or(other *Bitset) error {
 }
 
 func (b *Bitset) Xor(other *Bitset) error {
-	if b.size != other.size {
+	if b.numBits != other.numBits {
 		return ErrBitsetOfDifferentSize
 	}
 
-	for i := 0; i < b.size; i++ {
+	for i := 0; i < b.numByte; i++ {
 		current := b.bytes[i]
 		other := other.bytes[i]
 
@@ -158,8 +144,9 @@ func (b *Bitset) Inverse() {
 
 func (b *Bitset) Clone() *Bitset {
 	newBiteset := Bitset{
-		size:  b.size,
-		bytes: make([]uint8, b.size),
+		numByte: b.numByte,
+		numBits: b.numBits,
+		bytes:   make([]uint8, b.numByte),
 	}
 
 	copy(newBiteset.bytes, b.bytes)
@@ -167,19 +154,20 @@ func (b *Bitset) Clone() *Bitset {
 	return &newBiteset
 }
 
-func (b *Bitset) Lenght() int {
-	return b.size
+func (b *Bitset) Size() int {
+	return b.numBits
 }
 
 func (b *Bitset) Clear() {
-	b.bytes = make([]uint8, 0)
-	b.size = 0
+	for i := 0; i < b.numByte; i++ {
+		b.bytes[i] = 0
+	}
 }
 
 func (b *Bitset) String() string {
 	var sb strings.Builder
 
-	for i := b.size - 1; i >= 0; i-- {
+	for i := b.numByte - 1; i >= 0; i-- {
 		sb.WriteString(fmt.Sprintf("%08b ", b.bytes[i]))
 	}
 
