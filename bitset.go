@@ -79,6 +79,32 @@ func (b *Bitset) None() bool {
 	return true
 }
 
+func (b *Bitset) All() bool {
+	for _, b := range b.bytes {
+		if b != 0b11111111 {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (b *Bitset) Contain(other *Bitset) bool {
+	if b.numBits != other.numBits {
+		return false
+	}
+
+	for i := 0; i < b.numByte; i++ {
+		res := (b.bytes[i] & other.bytes[i])
+
+		if res != other.bytes[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
 func (b *Bitset) Equal(other *Bitset) bool {
 	if b.numBits != other.numBits {
 		return false
@@ -136,7 +162,7 @@ func (b *Bitset) Xor(other *Bitset) error {
 	return nil
 }
 
-func (b *Bitset) Inverse() {
+func (b *Bitset) Flip() {
 	for i, bits := range b.bytes {
 		b.bytes[i] = (0b11111111 - bits)
 	}
