@@ -33,8 +33,8 @@ func (c *cell[T]) String() string {
 }
 
 type ArenaKey struct {
-	gen   uint64
-	index int
+	Gen uint64
+	Id  int
 }
 
 type Arena[T any] struct {
@@ -58,8 +58,8 @@ func (a *Arena[T]) Create(value T) ArenaKey {
 		})
 		a.size++
 		return ArenaKey{
-			gen:   a.current_gen,
-			index: a.size - 1,
+			Gen: a.current_gen,
+			Id:  a.size - 1,
 		}
 	}
 
@@ -74,22 +74,22 @@ func (a *Arena[T]) Create(value T) ArenaKey {
 	a.first_free = nextFree
 
 	return ArenaKey{
-		gen:   a.current_gen,
-		index: currentCellIndex,
+		Gen: a.current_gen,
+		Id:  currentCellIndex,
 	}
 }
 
 func (a *Arena[T]) Contains(key ArenaKey) bool {
-	if key.index >= a.size || key.index < 0 {
+	if key.Id >= a.size || key.Id < 0 {
 		return false
 	}
 
-	cell := a.cells[key.index]
+	cell := a.cells[key.Id]
 	if cell.t == emptyCell {
 		return false
 	}
 
-	if cell.generation != key.gen {
+	if cell.generation != key.Gen {
 		return false
 	}
 
@@ -103,12 +103,12 @@ func (a *Arena[T]) Remove(key ArenaKey) error {
 	}
 
 	a.current_gen++
-	a.cells[key.index] = cell[T]{
+	a.cells[key.Id] = cell[T]{
 		t:          emptyCell,
 		generation: a.current_gen,
 		next:       a.first_free,
 	}
-	a.first_free = key.index
+	a.first_free = key.Id
 
 	return nil
 }
@@ -120,7 +120,7 @@ func (a *Arena[T]) Get(key ArenaKey) (T, error) {
 		return t, ErrEntityDoesNotExist
 	}
 
-	return a.cells[key.index].data, nil
+	return a.cells[key.Id].data, nil
 }
 
 func (a *Arena[T]) Set(key ArenaKey, value T) error {
@@ -129,7 +129,7 @@ func (a *Arena[T]) Set(key ArenaKey, value T) error {
 		return ErrEntityDoesNotExist
 	}
 
-	a.cells[key.index].data = value
+	a.cells[key.Id].data = value
 	return nil
 }
 
