@@ -8,11 +8,8 @@ import (
 
 func main() {
 	b, _ := datt.NewBitset(8)
-	b.Set(3, true)
 	b.Set(7, true)
-	b.Set(0, true)
 	b.Set(5, true)
-	b.Set(6, true)
 
 	b2, _ := datt.NewBitset(8)
 	b2.Set(3, true)
@@ -23,4 +20,5 @@ func main() {
 	log.Println(b)
 	log.Println(b2)
 	log.Println(b.Contain(b2))
+	log.Println(b.Crossing(b2))
 }

@@ -105,6 +105,21 @@ func (b *Bitset) Contain(other *Bitset) bool {
 	return true
 }
 
+func (b *Bitset) Crossing(other *Bitset) bool {
+	if b.numBits != other.numBits {
+		return false
+	}
+
+	for i := 0; i < b.numByte; i++ {
+		res := (b.bytes[i] & other.bytes[i])
+		if res != 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (b *Bitset) Equal(other *Bitset) bool {
 	if b.numBits != other.numBits {
 		return false
