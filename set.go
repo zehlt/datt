@@ -56,6 +56,11 @@ func (s *Set[T]) Remove(value T) error {
 	return nil
 }
 
+func (s *Set[T]) Has(value T) bool {
+	_, ok := s.hash[value]
+	return ok
+}
+
 func (s *Set[T]) Union(other *Set[T]) *Set[T] {
 	newSet := NewSet[T]()
 
