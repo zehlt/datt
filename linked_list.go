@@ -11,28 +11,36 @@ type linkedList[T any] struct {
 	len   int
 }
 
-// func (l *linkedList[T]) PushFront(v T) {
-// 	if l.len == 0 {
-// 		new := &node[T]{value: v}
-// 		l.front = new
-// 		l.back = new
-// 	}
-// 	l.len++
-// }
+func (l *linkedList[T]) PushFront(v T) {
+	new := &node[T]{value: v}
 
-func (l *linkedList[T]) PushBack(v T) {
 	if l.len == 0 {
-		new := &node[T]{value: v}
 		l.front = new
 		l.back = new
 		l.len++
 		return
 	}
 
-	newNode := &node[T]{value: v}
+	previousFront := l.front
+	new.next = previousFront
+	l.front = new
+
+	l.len++
+}
+
+func (l *linkedList[T]) PushBack(v T) {
+	new := &node[T]{value: v}
+
+	if l.len == 0 {
+		l.front = new
+		l.back = new
+		l.len++
+		return
+	}
+
 	previousBack := l.back
-	previousBack.next = newNode
-	l.back = newNode
+	previousBack.next = new
+	l.back = new
 	l.len++
 }
 
@@ -45,6 +53,7 @@ func (l *linkedList[T]) PopFront() (T, bool) {
 	if l.len == 1 {
 		front := l.front
 		l.front = nil
+		l.back = nil
 		l.len--
 		return front.value, true
 	}

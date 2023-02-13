@@ -61,6 +61,19 @@ func TestQueueLinkedListEnqueue(t *testing.T) {
 
 		AssertEqual(t, q.Len(), 3)
 	})
+
+	t.Run("enqueue dequeue enqueue dequeue", func(t *testing.T) {
+		q := datt.QueueLinkedList[float32]{}
+		q.Enqueue(16.3)
+		q.Enqueue(1.398)
+		q.Dequeue()
+		q.Enqueue(10.398)
+		got, ok := q.Dequeue()
+
+		AssertEqual(t, q.Len(), 1)
+		AssertEqual(t, ok, true)
+		AssertEqual(t, got, 1.398)
+	})
 }
 
 func TestQueueLinkedListDequeue(t *testing.T) {
