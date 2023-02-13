@@ -216,14 +216,6 @@ log.Println(tuple.Second) // Henry
 // datt.Quadruple
 ```
 
-### Dispatcher
-
-exemple in progress
-
-### Double Buffer Sync
-
-exemple in progress
-
 ### In Progess
 
 - Weight Graph
