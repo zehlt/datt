@@ -2,34 +2,37 @@ package datt
 
 type QueueCircularArray[T any] struct {
 	front int
-	next  int
-	arr   []T
-	cap   int
+	rear  int
 	len   int
+	cap   int
+	arr   []T
 }
 
-func NewQueueCircularArray[T any](initCap int) QueueCircularArray[T] {
-	return QueueCircularArray[T]{
-		cap: initCap,
-		arr: make([]T, initCap),
-	}
-}
+const defaultInitialCapacity = 4
 
 func (q *QueueCircularArray[T]) Enqueue(v T) {
 	if q.len == q.cap {
-		q.growComplex()
+		if q.cap <= 0 {
+			q.cap = defaultInitialCapacity
+			q.arr = make([]T, defaultInitialCapacity)
+		} else {
+			q.grow()
+		}
 	}
 
-	if q.next == q.cap {
-		q.next = 0
+	if q.len > 0 {
+		q.rear++
+
+		if q.rear == q.cap {
+			q.rear = 0
+		}
 	}
 
-	q.arr[q.next] = v
-	q.next++
+	q.arr[q.rear] = v
 	q.len++
 }
 
-func (q *QueueCircularArray[T]) growComplex() {
+func (q *QueueCircularArray[T]) grow() {
 	newArr := make([]T, q.cap*2)
 
 	for i := 0; i < q.len; i++ {
@@ -44,47 +47,41 @@ func (q *QueueCircularArray[T]) growComplex() {
 	q.arr = newArr
 	q.cap *= 2
 	q.front = 0
-	q.next = q.len
+	q.rear = q.len - 1
 }
 
 func (q *QueueCircularArray[T]) Dequeue() (T, bool) {
 	var v T
-	if q.front == q.next {
+	if q.len == 0 {
 		return v, false
 	}
 
-	if q.front == q.cap {
-		q.front = 0
+	v = q.arr[q.front]
+	if q.len > 1 {
+		q.front++
 	}
 
-	v = q.arr[q.front]
-	q.front++
 	q.len--
 	return v, true
 }
 
 func (q *QueueCircularArray[T]) Peek() (T, bool) {
-	if q.front == q.next {
-		if q.len == q.cap {
-			return q.arr[q.front], true
-		}
-
-		var d T
-		return d, false
+	if q.len == 0 {
+		var v T
+		return v, false
 	}
 
 	return q.arr[q.front], true
 }
 
 func (q *QueueCircularArray[T]) Do(f func(v T)) {
-	start := q.front
-
 	for i := 0; i < q.len; i++ {
-		if start == q.cap {
-			start = 0
+		if q.front == q.cap {
+			q.front = 0
 		}
-		f(q.arr[start])
-		start++
+
+		f(q.arr[q.front])
+		q.front++
 	}
 }
 
@@ -93,7 +90,7 @@ func (q *QueueCircularArray[T]) Len() int {
 }
 
 func (q *QueueCircularArray[T]) Clear() {
-	q.next = 0
-	q.front = 0
 	q.len = 0
+	q.rear = 0
+	q.front = 0
 }
