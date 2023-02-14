@@ -10,6 +10,7 @@ type QueueCircularArray[T any] struct {
 
 const defaultInitialCapacity = 4
 
+// O(1)
 func (q *QueueCircularArray[T]) Enqueue(v T) {
 	if q.len == q.cap {
 		if q.cap <= 0 {
@@ -50,6 +51,7 @@ func (q *QueueCircularArray[T]) grow() {
 	q.rear = q.len - 1
 }
 
+// O(1)
 func (q *QueueCircularArray[T]) Dequeue() (T, bool) {
 	var v T
 	if q.len == 0 {
@@ -65,6 +67,7 @@ func (q *QueueCircularArray[T]) Dequeue() (T, bool) {
 	return v, true
 }
 
+// O(1)
 func (q *QueueCircularArray[T]) Peek() (T, bool) {
 	if q.len == 0 {
 		var v T
@@ -74,6 +77,7 @@ func (q *QueueCircularArray[T]) Peek() (T, bool) {
 	return q.arr[q.front], true
 }
 
+// O(N)
 func (q *QueueCircularArray[T]) Do(f func(v T)) {
 	for i := 0; i < q.len; i++ {
 		if q.front == q.cap {
@@ -85,10 +89,12 @@ func (q *QueueCircularArray[T]) Do(f func(v T)) {
 	}
 }
 
+// O(1)
 func (q *QueueCircularArray[T]) Len() int {
 	return q.len
 }
 
+// O(1)
 func (q *QueueCircularArray[T]) Clear() {
 	q.len = 0
 	q.rear = 0
