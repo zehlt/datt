@@ -61,6 +61,10 @@ func (q *QueueCircularArray[T]) Dequeue() (T, bool) {
 	v = q.arr[q.front]
 	if q.len > 1 {
 		q.front++
+
+		if q.front == q.cap {
+			q.front = 0
+		}
 	}
 
 	q.len--

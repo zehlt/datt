@@ -278,6 +278,26 @@ func TestQueueCircularArrayClear(t *testing.T) {
 		AssertEqual(t, ok, true)
 		AssertEqual(t, got, 11)
 	})
+
+	t.Run("front circle back to 0", func(t *testing.T) {
+		q := datt.QueueCircularArray[int]{}
+		q.Enqueue(6)
+		q.Dequeue()
+		q.Enqueue(4)
+		q.Enqueue(7)
+		q.Dequeue()
+		q.Enqueue(2)
+		q.Dequeue()
+		q.Enqueue(9)
+		q.Dequeue()
+		q.Enqueue(3)
+		q.Dequeue()
+		got, ok := q.Dequeue()
+
+		AssertEqual(t, q.Len(), 0)
+		AssertEqual(t, got, 3)
+		AssertEqual(t, ok, true)
+	})
 }
 
 func TestQueueCircularArrayDo(t *testing.T) {
