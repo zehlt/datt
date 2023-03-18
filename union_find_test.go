@@ -177,6 +177,36 @@ func TestUnionFind(t *testing.T) {
 				{[2]int{0, 1}, true},
 			},
 		},
+		{
+			desc: "with path compression",
+			cap:  10,
+			unions: [][2]int{
+				{0, 1},
+				{0, 2},
+				{3, 4},
+				{0, 3},
+				{5, 6},
+				{7, 8},
+				{5, 3},
+			},
+			finds: []findquery{
+				{[2]int{1, 2}, true},
+				{[2]int{3, 4}, true},
+				{[2]int{1, 4}, true},
+				{[2]int{2, 4}, true},
+				{[2]int{1, 3}, true},
+				{[2]int{0, 3}, true},
+				{[2]int{0, 1}, true},
+				{[2]int{5, 6}, true},
+				{[2]int{5, 3}, true},
+				{[2]int{7, 8}, true},
+				{[2]int{5, 8}, false},
+				{[2]int{8, 9}, false},
+				{[2]int{0, 9}, false},
+				{[2]int{8, 3}, false},
+				{[2]int{4, 8}, false},
+			},
+		},
 	}
 
 	for _, tC := range testCases {

@@ -1,6 +1,6 @@
 package datt
 
-// weight + path compression
+// Weighted with path compression
 type UnionFind struct {
 	cap  int
 	arr  []int
@@ -64,13 +64,12 @@ func (u *UnionFind) Find(a int, b int) bool {
 }
 
 func (u *UnionFind) root(v int) int {
-	point := u.arr[v]
-
-	for point != u.arr[point] {
-		point = u.arr[point]
+	for v != u.arr[v] {
+		u.arr[v] = u.arr[u.arr[v]]
+		v = u.arr[v]
 	}
 
-	return point
+	return v
 }
 
 func (u *UnionFind) isOutOfRange(a int, b int) bool {
