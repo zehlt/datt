@@ -18,11 +18,7 @@ func NewUnionFind(cap int) *UnionFind {
 		size: make([]int, cap),
 		cap:  cap,
 	}
-
-	for i := 0; i < cap; i++ {
-		uf.arr[i] = i
-		uf.size[i] = 1
-	}
+	uf.Clear()
 
 	return uf
 }
@@ -61,6 +57,14 @@ func (u *UnionFind) Find(a int, b int) bool {
 	}
 
 	return u.root(a) == u.root(b)
+}
+
+// O(N)
+func (u *UnionFind) Clear() {
+	for i := 0; i < u.cap; i++ {
+		u.arr[i] = i
+		u.size[i] = 1
+	}
 }
 
 func (u *UnionFind) root(v int) int {

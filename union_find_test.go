@@ -21,6 +21,20 @@ func TestUFNew(t *testing.T) {
 	})
 }
 
+func TestUFClear(t *testing.T) {
+	t.Run("clear remove all unions", func(t *testing.T) {
+		uf := datt.NewUnionFind(10)
+
+		uf.Union(1, 2)
+		got := uf.Find(1, 2)
+		AssertEqual(t, got, true)
+
+		uf.Clear()
+		got = uf.Find(1, 2)
+		AssertEqual(t, got, false)
+	})
+}
+
 func TestUFFind(t *testing.T) {
 	t.Run("not union", func(t *testing.T) {
 		uf := datt.NewUnionFind(10)
