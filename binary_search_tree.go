@@ -169,7 +169,7 @@ func (bst *BinarySearchTree[T]) Do(order OrderTraversal, f func(v T)) {
 	case PostOrder:
 		bst.postorder(f, bst.root)
 	case LevelOrder:
-		bst.levelorder(f, bst.root)
+		bst.levelorder(f)
 	default:
 		panic("must pick the right order traversal constant")
 	}
@@ -205,7 +205,8 @@ func (bst *BinarySearchTree[T]) postorder(f func(v T), node *btNode[T]) {
 	f(node.value)
 }
 
-func (bst *BinarySearchTree[T]) levelorder(f func(v T), node *btNode[T]) {
+// TODO: check if correct
+func (bst *BinarySearchTree[T]) levelorder(f func(v T)) {
 	if bst.root == nil {
 		return
 	}

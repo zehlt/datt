@@ -1,7 +1,7 @@
 package datt
 
 type QueueLinkedList[T any] struct {
-	ll linkedList[T]
+	ll LinkedList[T]
 }
 
 // O(1)

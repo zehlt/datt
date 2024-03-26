@@ -5,13 +5,13 @@ type node[T any] struct {
 	next  *node[T]
 }
 
-type linkedList[T any] struct {
+type LinkedList[T any] struct {
 	front *node[T]
 	back  *node[T]
 	len   int
 }
 
-func (l *linkedList[T]) PushFront(v T) {
+func (l *LinkedList[T]) PushFront(v T) {
 	new := &node[T]{value: v}
 
 	if l.len == 0 {
@@ -28,7 +28,7 @@ func (l *linkedList[T]) PushFront(v T) {
 	l.len++
 }
 
-func (l *linkedList[T]) PushBack(v T) {
+func (l *LinkedList[T]) PushBack(v T) {
 	new := &node[T]{value: v}
 
 	if l.len == 0 {
@@ -44,7 +44,7 @@ func (l *linkedList[T]) PushBack(v T) {
 	l.len++
 }
 
-func (l *linkedList[T]) PopFront() (T, bool) {
+func (l *LinkedList[T]) PopFront() (T, bool) {
 	if l.len == 0 {
 		var d T
 		return d, false
@@ -64,7 +64,7 @@ func (l *linkedList[T]) PopFront() (T, bool) {
 	return previous.value, true
 }
 
-func (l *linkedList[T]) Front() (T, bool) {
+func (l *LinkedList[T]) Front() (T, bool) {
 	if l.len == 0 {
 		var d T
 		return d, false
@@ -73,11 +73,11 @@ func (l *linkedList[T]) Front() (T, bool) {
 	return l.front.value, true
 }
 
-func (l *linkedList[T]) Len() int {
+func (l *LinkedList[T]) Len() int {
 	return l.len
 }
 
-func (l *linkedList[T]) Do(f func(v T)) {
+func (l *LinkedList[T]) Do(f func(v T)) {
 	current := l.front
 
 	for current != nil {
@@ -86,7 +86,7 @@ func (l *linkedList[T]) Do(f func(v T)) {
 	}
 }
 
-func (l *linkedList[T]) Clear() {
+func (l *LinkedList[T]) Clear() {
 	l.len = 0
 	l.front = nil
 	l.back = nil
